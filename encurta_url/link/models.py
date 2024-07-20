@@ -7,12 +7,14 @@ from django.core.validators import MinLengthValidator
 from django.contrib import admin
 from shortuuid import ShortUUID
 # Create your models here.
+def default_valid_until():
+    return timezone.now() + timedelta(days=30)
 class Link(models.Model):
 	url = models.URLField()
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
-	urlEncurtada = models.URLField(primary_key=True,unique=True, editable=False, auto_created=True, blank=True,)
-	valid_until = models.DateTimeField(default=timezone.now() + timedelta(days=30), blank=False)
+	urlEncurtada = models.CharField( max_length=10, primary_key=True,unique=True, editable=False, auto_created=True, blank=True,)
+	valid_until = models.DateTimeField(default=default_valid_until,blank=False)
 	def save(self, *args, **kwargs):
 		def generate_url():
 			try:
